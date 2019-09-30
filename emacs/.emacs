@@ -40,6 +40,17 @@
 
 ;; Other stuff
 
+;; Use try, which allows us to try some packages and then leave the config as it was.
+
+(use-package try)
+
+;; Use which key that allows us to have a visual clue as to what comes next in a command.
+
+(use-package which-key
+  :config (which-key-mode))
+
+;; Make sure we remove the annoying bell sound.
+
 (setq visible-bell 1)
 
 
@@ -48,13 +59,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (powerline solarized-theme helm))))
+ '(package-selected-packages
+   (quote
+    (org-bullets which-key try rainbow-delimiters powerline helm))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "green")))))
 
 (require 'helm)
 (require 'helm-config)
@@ -93,9 +106,28 @@
 (add-hook 'helm-minibuffer-set-up-hook
           'spacemacs//helm-hide-minibuffer-maybe)
 
-(setq helm-autoresize-max-height 40)
+(setq helm-autoresize-max-height 25)
 (setq helm-autoresize-min-height 0)
 (helm-autoresize-mode 1)
+
+;; Let helm fuzzy search always
+
+(setq helm-mode-fuzzy-match  t)
+(setq helm-completion-in-region-fuzzy-match t)
+
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-c h o") 'helm-occur)
+
+
+(when (executable-find "ack")
+    (setq helm-grep-default-command "ack -Hn --no-group --no-color %e %p %f"
+        helm-grep-default-recurse-command "ack -H --no-group --no-color %e %p %f"))
+
+
 
 (helm-mode 1)
 
@@ -111,18 +143,20 @@
 
 ;; Set default font and configure font resizing
 
-;; I’m partial to Inconsolata.
+;; I like Inconsolata much better than the other fonts like the Adobe one, so basically use it.
 
 ;; The standard text-scale- functions just resize the text in the current buffer; I’d generally
 ;; like to resize the text in every buffer, and I usually want to change the size of the modeline,
 ;; too (this is especially helpful when presenting). These functions and bindings let me resize
 ;; everything all together!
 
-;; Note that this overrides the default font-related keybindings from sensible-defaults.
-
 (defun cll/open-user-init-file()
   (interactive)
   (find-file user-init-file))
+
+;; Note that this version of Inconsolata is a custom version of it because the normal version had
+;; a hypon in the name it was "Inconsolata-g" so I changed the font name to "InconsolataG".
+;; Otherwise it is the same font.
 
 (setq cll/default-font "InconsolataG")
 (setq cll/default-font-size 13)
@@ -168,34 +202,13 @@ other, future frames."
 
 (define-key global-map (kbd "C-)") 'cll/reset-font-size)
 (define-key global-map (kbd "C-+") 'cll/increase-font-size)
-(define-key global-map (kbd "C-=") 'cll/increase-font-size)
-(define-key global-map (kbd "C-_") 'cll/decrease-font-size)
 (define-key global-map (kbd "C--") 'cll/decrease-font-size)
 
 (cll/reset-font-size)
 
-
-;; Load up a theme
-
 ;; Saw this theme on a chat and it is pretty cool, so let's try it.
 
 (use-package nord-theme)
-;  :config
-;  (load-theme 'solarized-light t)
-;
-;  (setq solarized-use-variable-pitch nil
-;        solarized-height-plus-1 1.0
-;        solarized-height-plus-2 1.0
-;        solarized-height-plus-3 1.0
-;        solarized-height-plus-4 1.0)
-;
-;  (let ((line (face-attribute 'mode-line :underline)))
-;    (set-face-attribute 'mode-line          nil :overline   line)
-;    (set-face-attribute 'mode-line-inactive nil :overline   line)
-;    (set-face-attribute 'mode-line-inactive nil :underline  line)
-;    (set-face-attribute 'mode-line          nil :box        nil)
-;    (set-face-attribute 'mode-line-inactive nil :box        nil)
-;    (set-face-attribute 'mode-line-inactive nil :background "#f9f2d9")))
 
 (defun transparency (value)
   "Sets the transparency of the frame window. 0=transparent/100=opaque."
@@ -221,3 +234,18 @@ other, future frames."
   :ensure t
   :config
   (powerline-default-theme))
+
+;; Rainbow delimiters, this is changing the color of the parens depending on the depth they are in.
+
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+;; Set fullscreen on start, I can go out of this by C-z or f11
+(set-frame-parameter nil 'fullscreen 'fullboth)
+
+;; Org mode, which is in emacs by default... who would have known.
+
+(use-package org-bullets
+  :config (add-hook 'org-mode-hook 'org-bullets-mode))
