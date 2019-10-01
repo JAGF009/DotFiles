@@ -122,10 +122,13 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-c h o") 'helm-occur)
 
+(setq cll/ack-executable "ack")
+(setq cll/ack-default-command (format "%s %s" cll/ack-executable "-Hn --no-group --no-color %e %p %f"))
+(setq cll/ack-default-recurse-command (format "%s %s" cll/ack-executable "ack -H --no-group --no-color %e %p %f"))
 
-(when (executable-find "ack")
-    (setq helm-grep-default-command "ack -Hn --no-group --no-color %e %p %f"
-        helm-grep-default-recurse-command "ack -H --no-group --no-color %e %p %f"))
+(when (executable-find cll/ack-executable)
+    (setq helm-grep-default-command cll/ack-default-command
+        helm-grep-default-recurse-command cll/ack-default-recurse-command))
 
 
 
