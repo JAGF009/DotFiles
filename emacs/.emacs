@@ -254,3 +254,12 @@ other, future frames."
 
 (use-package org-bullets
   :config (add-hook 'org-mode-hook 'org-bullets-mode))
+
+;; Set cmd as control on mac, this is due to my set up
+;; I change cmd to control, so I want the control key (which is
+;; command to be the control of emacs)
+
+;; See also https://www.emacswiki.org/emacs/EmacsForMacOS#toc31
+
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier 'control))
