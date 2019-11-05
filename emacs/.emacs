@@ -71,6 +71,10 @@
  '(rainbow-delimiters-depth-2-face ((t (:foreground "DarkSeaGreen1"))))
  '(rainbow-delimiters-unmatched-face ((t (:foreground "orange red")))))
 
+;; Remove the start up message as I don't really want it to begin with.
+;; Open it up with C-h t
+(setq inhibit-startup-screen t)
+
 (require 'helm)
 (require 'helm-config)
 
