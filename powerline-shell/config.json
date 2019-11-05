@@ -1,0 +1,33 @@
+{
+  "segments": [
+    "exit_code",
+    "virtual_env",
+    "time", 
+    "batteryJA",
+    "ssh",
+    "cwd",
+    "git_stash",
+    "git",
+    "jobs",
+    "read_only",
+    "root"
+  ],
+  "time": {
+    "format": "(%H:%M)"
+  },
+  "cwd": {
+    "max_depth": 3,
+    "max_dir_size": 5,
+    "full_cwd": true
+  },
+  "vcs": {
+    "show_symbol": true,
+    "aliases": {
+      "git": {
+        "master": "",
+        "release": "r",
+        "current-feature": "wip"
+      }
+    }
+  }
+}
